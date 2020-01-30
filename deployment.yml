@@ -1,0 +1,79 @@
+### deployment yml file
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{PROJECT_NAME}}
+  namespace: {{NAME_SPACE}}
+spec:
+  ports:
+  - port: {{DOCKER_PORT}}
+    name: {{PROJECT_NAME}}
+    protocol: TCP
+    targetPort: {{SERVICE_PORT}}
+  selector:
+    app: {{PROJECT_NAME}}
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{PROJECT_NAME}}
+  namespace: {{DEPLOYMENT_ENV}}
+spec:
+  selector:
+    matchLabels:
+      app: {{PROJECT_NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{PROJECT_NAME}}
+    spec:
+      containers:
+      - name: {{PROJECT_NAME}}
+        image: docker-registry.rintio.com:5000/{{PROJECT_NAME}}:{{IMAGE_TAG}}
+        resources:
+          limits:
+            memory: {{MEMORY}}
+            cpu: {{CPU}}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{DOCKER_PORT}}
+          name: {{PROJECT_NAME}}
+          protocol: TCP
+        volumeMounts:
+        - name: {{VOLUME_NAME}}
+          mountPath: {{CONTAINER_VOLUME_PATH}}
+      volumes:
+      - name: {{VOLUME_NAME}}
+        persistentVolumeClaim:
+          claimName: {{VOLUME_NAME}}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{PROJECT_NAME}}
+  labels:
+    type: local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: {{VOLUME_SIZE}}
+  hostPath:
+    path: {{VOLUME_DATA_PATH}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{VOLUME_NAME}}
+  namespace: {{NAME_SPACE}}
+  labels:
+    app: {{PROJECT_NAME}}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{VOLUME_SIZE}}
+---
