@@ -7,7 +7,7 @@
 #########################################################################################
 
 
-PROJECT_NAME="hercul"        # project name
+PROJECT_NAME="CS50"        # project name
 SERVICE_PORT=80           # physical service port
 DOCKER_PORT=80            # container port
 IMAGE_TAG="1.1"             # docker image version (tag)

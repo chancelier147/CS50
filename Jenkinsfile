@@ -6,7 +6,7 @@
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     agent {
       kubernetes {
-        label "hercul"
+        label "CS50"
         yaml """
   apiVersion: v1
   kind: Pod
@@ -53,7 +53,7 @@
   ////////////    CHANGE ONLY THE VARABLES IN environmant tag ///////////////////
   //////////////////////////////////////////////////////////////////////////////
     environment {
-      PROJECT_NAME="hercul"          // project name with no any space
+      PROJECT_NAME="CS50"          // project name with no any space
       IMAGE_TAG='1.1'               // the tag or version of docker image
       DEPLOYMENT_ENV='development'    // deployment environment in kubernetes cluster
     }
